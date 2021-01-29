@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yiyuan.demo.dao.UserRoleDao">
+  <resultMap id="BaseResultMap" type="com.yiyuan.demo.entiy.mid.UserRole">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="role_id" jdbcType="BIGINT" property="roleId" />
+    <result column="createtime" jdbcType="TIMESTAMP" property="createtime" />
+    <result column="creator" jdbcType="VARCHAR" property="creator" />
+    <result column="editetime" jdbcType="TIMESTAMP" property="editetime" />
+    <result column="editor" jdbcType="VARCHAR" property="editor" />
+    <result column="deleted" jdbcType="BOOLEAN" property="deleted" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, user_id, role_id, createtime, creator, editetime, editor, deleted
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from user_role
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from user_role
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.yiyuan.demo.entiy.mid.UserRole" useGeneratedKeys="true">
+    insert into user_role (user_id, role_id, createtime, 
+      creator, editetime, editor, 
+      deleted)
+    values (#{userId,jdbcType=BIGINT}, #{roleId,jdbcType=BIGINT}, #{createtime,jdbcType=TIMESTAMP}, 
+      #{creator,jdbcType=VARCHAR}, #{editetime,jdbcType=TIMESTAMP}, #{editor,jdbcType=VARCHAR}, 
+      #{deleted,jdbcType=BOOLEAN})
+  </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.yiyuan.demo.entiy.mid.UserRole" useGeneratedKeys="true">
+    insert into user_role
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="roleId != null">
+        role_id,
+      </if>
+      <if test="createtime != null">
+        createtime,
+      </if>
+      <if test="creator != null">
+        creator,
+      </if>
+      <if test="editetime != null">
+        editetime,
+      </if>
+      <if test="editor != null">
+        editor,
+      </if>
+      <if test="deleted != null">
+        deleted,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="roleId != null">
+        #{roleId,jdbcType=BIGINT},
+      </if>
+      <if test="createtime != null">
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null">
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="editetime != null">
+        #{editetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="editor != null">
+        #{editor,jdbcType=VARCHAR},
+      </if>
+      <if test="deleted != null">
+        #{deleted,jdbcType=BOOLEAN},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yiyuan.demo.entiy.mid.UserRole">
+    update user_role
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="roleId != null">
+        role_id = #{roleId,jdbcType=BIGINT},
+      </if>
+      <if test="createtime != null">
+        createtime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null">
+        creator = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="editetime != null">
+        editetime = #{editetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="editor != null">
+        editor = #{editor,jdbcType=VARCHAR},
+      </if>
+      <if test="deleted != null">
+        deleted = #{deleted,jdbcType=BOOLEAN},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yiyuan.demo.entiy.mid.UserRole">
+    update user_role
+    set user_id = #{userId,jdbcType=BIGINT},
+      role_id = #{roleId,jdbcType=BIGINT},
+      createtime = #{createtime,jdbcType=TIMESTAMP},
+      creator = #{creator,jdbcType=VARCHAR},
+      editetime = #{editetime,jdbcType=TIMESTAMP},
+      editor = #{editor,jdbcType=VARCHAR},
+      deleted = #{deleted,jdbcType=BOOLEAN}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="findUserId" parameterType="java.lang.Long" resultType="java.lang.String">
+    select
+    role_id
+    from user_role
+    where user_id = #{userId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteRoleIdUserId" parameterType="java.lang.Long">
+    delete from user_role
+    where user_id = #{userId,jdbcType=BIGINT} and
+      role_id = #{roleId,jdbcType=BIGINT}
+  </delete>
+  <insert id="save" keyColumn="id" keyProperty="id" parameterType="com.yiyuan.demo.entiy.mid.UserRole" useGeneratedKeys="true">
+    insert into user_role
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="roleId != null">
+        role_id,
+      </if>
+      <if test="createtime != null">
+        createtime,
+      </if>
+      <if test="creator != null">
+        creator,
+      </if>
+      <if test="editetime != null">
+        editetime,
+      </if>
+      <if test="editor != null">
+        editor,
+      </if>
+      <if test="deleted != null">
+        deleted,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="roleId != null">
+        #{roleId,jdbcType=BIGINT},
+      </if>
+      <if test="createtime != null">
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null">
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="editetime != null">
+        #{editetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="editor != null">
+        #{editor,jdbcType=VARCHAR},
+      </if>
+      <if test="deleted != null">
+        #{deleted,jdbcType=BOOLEAN},
+      </if>
+    </trim>
+  </insert>
+</mapper>
