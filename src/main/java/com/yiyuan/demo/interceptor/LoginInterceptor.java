@@ -34,68 +34,68 @@ public class LoginInterceptor implements HandlerInterceptor {
             throws Exception {
     }
 
-    @Override
-    public boolean preHandle(HttpServletRequest arg0, HttpServletResponse arg1, Object arg2) throws Exception {
-        System.out.println(arg0.getRequestURI());
-        //此处为不需要登录的接口放行
-        if (arg0.getRequestURI().contains("/toLogin") ||arg0.getRequestURI().contains("/login") || arg0.getRequestURI().contains("/register") || arg0.getRequestURI().contains("/error") || arg0.getRequestURI().contains("/static")) {
-            return true;
-        }
-        //权限路径拦截
-        //PrintWriter resultWriter = arg1.getOutputStream();
-        // TODO: 有时候用PrintWriter 回报 getWriter() has already been called for this response
-        //换成ServletOutputStream就OK了
-        arg1.setContentType("text/html;charset=utf-8");
-        ServletOutputStream resultWriter = arg1.getOutputStream();
-        final String headerToken = arg0.getHeader("token");
-        //判断请求信息
-        if (null == headerToken || headerToken.trim().equals("")) {
-            resultWriter.write("你没有token,需要登录".getBytes());
-            resultWriter.flush();
-            resultWriter.close();
-            return false;
-        }
-        //解析Token信息
-        try {
-            Claims claims = Jwts.parser().setSigningKey("iwqjhda8232bjgh432").parseClaimsJws(headerToken).getBody();
-            System.out.println(claims);
-            String tokenUserId = (String) claims.get("userId");
-            long iTokenUserId = Long.parseLong(tokenUserId);
-            //根据客户Token查找数据库Token
-            Token myToken = tokenDao.selectByPrimaryKeyUser(iTokenUserId);
-
-            //数据库没有Token记录
-            if (null == myToken) {
-                resultWriter.write("我没有你的token？,需要登录".getBytes());
-                resultWriter.flush();
-                resultWriter.close();
-                return false;
-            }
-            //数据库Token与客户Token比较
-            if (!headerToken.equals(myToken.getToken())) {
-                resultWriter.print("你的token修改过？,需要登录");
-                resultWriter.flush();
-                resultWriter.close();
-                return false;
-            }
-            //判断Token过期
-            Date tokenDate = claims.getExpiration();
-            int overTime = (int) (System.currentTimeMillis() - tokenDate.getTime()) / 1000;
-            if (overTime > 60 * 60 * 24 * 3) {
-                resultWriter.write("你的token过期了？,需要登录".getBytes());
-                resultWriter.flush();
-                resultWriter.close();
-                return false;
-            }
-
-        } catch (Exception e) {
-            resultWriter.write("反正token不对,需要登录".getBytes());
-            resultWriter.flush();
-            resultWriter.close();
-            return false;
-        }
-        //最后才放行
-        return true;
-    }
+//    @Override
+//    public boolean preHandle(HttpServletRequest arg0, HttpServletResponse arg1, Object arg2) throws Exception {
+//        System.out.println(arg0.getRequestURI());
+//        //此处为不需要登录的接口放行
+//        if (arg0.getRequestURI().contains("/toLogin") ||arg0.getRequestURI().contains("/login") || arg0.getRequestURI().contains("/register") || arg0.getRequestURI().contains("/error") || arg0.getRequestURI().contains("/static")) {
+//            return true;
+//        }
+//        //权限路径拦截
+//        //PrintWriter resultWriter = arg1.getOutputStream();
+//        // TODO: 有时候用PrintWriter 回报 getWriter() has already been called for this response
+//        //换成ServletOutputStream就OK了
+//        arg1.setContentType("text/html;charset=utf-8");
+//        ServletOutputStream resultWriter = arg1.getOutputStream();
+//        final String headerToken = arg0.getHeader("token");
+//        //判断请求信息
+//        if (null == headerToken || headerToken.trim().equals("")) {
+//            resultWriter.write("你没有token,需要登录".getBytes());
+//            resultWriter.flush();
+//            resultWriter.close();
+//            return false;
+//        }
+//        //解析Token信息
+//        try {
+//            Claims claims = Jwts.parser().setSigningKey("iwqjhda8232bjgh432").parseClaimsJws(headerToken).getBody();
+//            System.out.println(claims);
+//            String tokenUserId = (String) claims.get("userId");
+//            long iTokenUserId = Long.parseLong(tokenUserId);
+//            //根据客户Token查找数据库Token
+//            Token myToken = tokenDao.selectByPrimaryKeyUser(iTokenUserId);
+//
+//            //数据库没有Token记录
+//            if (null == myToken) {
+//                resultWriter.write("我没有你的token？,需要登录".getBytes());
+//                resultWriter.flush();
+//                resultWriter.close();
+//                return false;
+//            }
+//            //数据库Token与客户Token比较
+//            if (!headerToken.equals(myToken.getToken())) {
+//                resultWriter.print("你的token修改过？,需要登录");
+//                resultWriter.flush();
+//                resultWriter.close();
+//                return false;
+//            }
+//            //判断Token过期
+//            Date tokenDate = claims.getExpiration();
+//            int overTime = (int) (System.currentTimeMillis() - tokenDate.getTime()) / 1000;
+//            if (overTime > 60 * 60 * 24 * 3) {
+//                resultWriter.write("你的token过期了？,需要登录".getBytes());
+//                resultWriter.flush();
+//                resultWriter.close();
+//                return false;
+//            }
+//
+//        } catch (Exception e) {
+//            resultWriter.write("反正token不对,需要登录".getBytes());
+//            resultWriter.flush();
+//            resultWriter.close();
+//            return false;
+//        }
+//        //最后才放行
+//        return true;
+//    }
 
 }

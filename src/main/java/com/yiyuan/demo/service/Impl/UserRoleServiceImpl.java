@@ -1,6 +1,8 @@
 package com.yiyuan.demo.service.Impl;
 
+import com.yiyuan.demo.dao.RoleDao;
 import com.yiyuan.demo.dao.UserRoleDao;
+import com.yiyuan.demo.entiy.Role;
 import com.yiyuan.demo.entiy.mid.UserRole;
 import com.yiyuan.demo.service.UserRoleService;
 import org.springframework.stereotype.Service;
@@ -16,7 +18,8 @@ import java.util.List;
 public class UserRoleServiceImpl implements UserRoleService {
     @Resource
     UserRoleDao userRoleDao;
-
+    @Resource
+    RoleDao roleDao;
     @Override
     public void insert(Long userId, List<String> roleIds) {
         List<String> list = userRoleDao.findUserId(userId);
@@ -33,6 +36,13 @@ public class UserRoleServiceImpl implements UserRoleService {
             userRoleDao.insertSelective(userRole);
         }
 }
+
+    @Override
+    public Role selectId(Long userId) {
+       Long roleId= userRoleDao.selectById(userId);
+       Role role= roleDao.selectByPrimaryKey(roleId);
+        return role;
+    }
 
     public List<String> list1(List<String> list, List<String> roleIds) {
         List<String> list1 = new ArrayList<>();

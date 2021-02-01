@@ -3,6 +3,9 @@ package com.yiyuan.demo.dao;
 
 import com.yiyuan.demo.entiy.Permission;
 
+import java.security.Permissions;
+import java.util.List;
+
 public interface PermissionDao {
     int deleteByPrimaryKey(Long id);
 
@@ -17,4 +20,6 @@ public interface PermissionDao {
     int updateByPrimaryKey(Permission record);
 
     int countselectCode(String code);
+
+    List<Permission> findPermission();
 }

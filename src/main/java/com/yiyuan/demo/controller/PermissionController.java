@@ -1,14 +1,19 @@
 package com.yiyuan.demo.controller;
 
 
+import com.sun.xml.internal.ws.client.sei.ResponseBuilder;
 import com.yiyuan.demo.entiy.Permission;
 import com.yiyuan.demo.eunm.CsEnum;
 import com.yiyuan.demo.result.AjaxResult;
 import com.yiyuan.demo.service.PermissionService;
+import com.yiyuan.demo.service.RolePermissionService;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -21,7 +26,8 @@ import org.springframework.web.bind.annotation.*;
 public class PermissionController {
     @Autowired
     PermissionService permissionService;
-
+    @Autowired
+    RolePermissionService rolePermissionService;
     @PostMapping("/save")
     public AjaxResult save(@RequestBody Permission permission)  {
          int result=permissionService.countselectCode(permission.getCode());
@@ -43,5 +49,18 @@ public class PermissionController {
     @GetMapping("/get/{id}")
     public AjaxResult get(@PathVariable String id){
         return AjaxResult.success(permissionService.selectByPrimaryKey(Long.valueOf(id)));
+    }
+
+    /**
+     * 菜单多级页面（菜单）
+     *
+     * @param
+     * @param
+     * @return 返回
+     */
+    @PostMapping("/select")
+    public AjaxResult select() {
+        List<Permission> permissionList = permissionService.findMenu();
+        return AjaxResult.success(permissionList);
     }
 }

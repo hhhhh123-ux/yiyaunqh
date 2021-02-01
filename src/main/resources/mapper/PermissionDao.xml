@@ -16,7 +16,7 @@
     <result column="deleted" jdbcType="BOOLEAN" property="deleted" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, parent_id, code, `name`, intro, category, url, createtime, creator, editetime, 
+    id, parent_id, code, `name`, intro, category, url, createtime, creator, editetime,
     editor, deleted
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -171,5 +171,10 @@
     count(*)
     from permission
     where code = #{code,jdbcType=VARCHAR}
+  </select>
+  <select id="findPermission" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from permission
   </select>
 </mapper>

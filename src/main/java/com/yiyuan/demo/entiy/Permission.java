@@ -1,9 +1,11 @@
 package com.yiyuan.demo.entiy;
 
+import jdk.nashorn.internal.ir.annotations.Immutable;
 import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * permission
@@ -19,6 +21,7 @@ public class Permission implements Serializable {
     /**
      * 所属父级权限ID
      */
+
     private Long parentId;
 
     /**
@@ -71,5 +74,7 @@ public class Permission implements Serializable {
      */
     private Boolean deleted;
 
+    @Immutable
+    private List<Permission> children;
     private static final long serialVersionUID = 1L;
 }

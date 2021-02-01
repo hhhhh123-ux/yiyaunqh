@@ -27,6 +27,7 @@ public class UserDetailsServiceImpl extends AbstractUserDetailsAuthenticationPro
 
     @Override
     protected UserDetails retrieveUser(String s, UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) throws AuthenticationException {
+       System.out.println("用户名："+s);
         UserDetails loadedUser = userService.selectByName(s);
         if (loadedUser == null) {
             logger.error("UserDetails为空！");
@@ -41,7 +42,7 @@ public class UserDetailsServiceImpl extends AbstractUserDetailsAuthenticationPro
         }
 
         String presentedPassword = usernamePasswordAuthenticationToken.getCredentials().toString();
-
+        System.out.println("用户名：="+presentedPassword);
         // 账户密码校验
         if (!passwordEncoder.matches(presentedPassword, loadedUser.getPassword())) {
             logger.error("密码不正确！");

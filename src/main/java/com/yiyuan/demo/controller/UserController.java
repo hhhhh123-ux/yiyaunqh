@@ -1,18 +1,24 @@
 package com.yiyuan.demo.controller;
 
 
+import com.yiyuan.demo.entiy.Permission;
+import com.yiyuan.demo.entiy.Role;
 import com.yiyuan.demo.entiy.User;
+import com.yiyuan.demo.entiy.session.CurrentUser;
+import com.yiyuan.demo.entiy.token.Token;
 import com.yiyuan.demo.result.AjaxResult;
-import com.yiyuan.demo.service.RoleService;
-import com.yiyuan.demo.service.UserRoleService;
-import com.yiyuan.demo.service.UserService;
+import com.yiyuan.demo.service.*;
 import com.yiyuan.demo.service.token.TokenService;
+import com.yiyuan.demo.utils.CurrentUserUtils;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,6 +41,11 @@ public class UserController {
     @Autowired
     UserRoleService userRoleService;
 
+    @Autowired
+    PermissionService permissionService;
+
+    @Autowired
+    RolePermissionService rolePermissionService;
     /****
      *登录功能
      *
@@ -42,15 +53,14 @@ public class UserController {
      */
 //    @ApiOperation(value = "登录")
 //    @RequestMapping(value = "/login", method = RequestMethod.GET)
-//    public AjaxResult login(@RequestParam("mobile") String mobile, @RequestParam("password") String password) {
-//        AjaxResult<Token> tokenAjaxResult = userService.login(mobile, password);
+//    public AjaxResult login(@RequestParam("username") String username, @RequestParam("password") String password) {
+//        AjaxResult<Token> tokenAjaxResult = userService.login(username, password);
 //        Token token = tokenAjaxResult.getData();
-//        User user = userService.selectByMobilePassword(mobile, password);
+//        User user = userService.selectByMobilePassword(username, password);
 //        List<Role> role = roleService.selectByPrimaryKey(user.getId());
 //        token.setRoles(role);
 //        return AjaxResult.success(tokenAjaxResult);
 //    }
-
 
 
     /****
@@ -65,9 +75,10 @@ public class UserController {
         return AjaxResult.success(1);
     }
 
-    @PostMapping("/get/{id}")
+    @GetMapping("/get/{id}")
     @ResponseBody
     public AjaxResult get(@PathVariable String id) {
+
         return AjaxResult.success(userService.selectByPrimaryKey(Long.valueOf(id)));
     }
 
@@ -89,19 +100,36 @@ public class UserController {
     }
 
     /**
-     s sl
+     * s sl
      *
      * @描述: 登录页面
-     *
      * @params:
      * @return:
      * @date: 2018/9/29 21:20
      */
-    @RequestMapping("/toLogin")
-    public String toLogin()
-    {
+    @RequestMapping(value = "/toLogin")
+    public String toLogin() {
         return "login";
     }
 
-
+    /**
+     * s sl
+     *
+     * @描述: 登录页面
+     * @params:
+     * @return:
+     * @date: 2018/9/29 21:20
+     */
+    @RequestMapping(value = "/index")
+    public String toIndex(Model model) {
+        CurrentUser currentUser = CurrentUserUtils.getCurrent();
+       User user= userService.selectByName(currentUser.getUserName());
+        model.addAttribute("user", user);
+        //permissionService.selectByPrimaryKey(Long.valueOf(id))
+       Role role= userRoleService.selectId(user.getId());
+       model.addAttribute("role",role);
+       List<Permission> permissionList=rolePermissionService.selectId(role.getId());
+        model.addAttribute("menu",permissionList);
+        return "index";
+    }
 }

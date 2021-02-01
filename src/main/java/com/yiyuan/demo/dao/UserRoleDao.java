@@ -24,4 +24,6 @@ public interface UserRoleDao {
     void deleteRoleIdUserId(Long roleId, Long userId);
 
     void save(Long roleId, Long userId);
+
+   Long selectById(Long userId);
 }

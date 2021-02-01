@@ -179,4 +179,10 @@
       </if>
     </trim>
   </insert>
+  <select id="selectById" parameterType="java.lang.Long" resultType="java.lang.Long">
+    select
+    role_id
+    from user_role
+    where user_id = #{userId,jdbcType=BIGINT}
+  </select>
 </mapper>

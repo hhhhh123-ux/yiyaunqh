@@ -3,6 +3,8 @@ package com.yiyuan.demo.service;
 
 import com.yiyuan.demo.entiy.Permission;
 
+import java.util.List;
+
 /**
  * @author SongYC
  */
@@ -28,4 +30,6 @@ public interface PermissionService {
      * @return int
      */
     Permission selectByPrimaryKey(Long id);
+
+    List<Permission> findMenu();
 }
