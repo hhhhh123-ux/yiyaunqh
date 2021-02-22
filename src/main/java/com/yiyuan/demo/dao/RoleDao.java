@@ -2,6 +2,8 @@ package com.yiyuan.demo.dao;
 
 import com.yiyuan.demo.entiy.Role;
 
+import java.util.List;
+
 public interface RoleDao {
     int deleteByPrimaryKey(Long id);
 
@@ -15,4 +17,7 @@ public interface RoleDao {
 
     int updateByPrimaryKey(Role record);
 
+    List<Role> selectByAllList(Role role);
+
+    List<Role> findAll();
 }

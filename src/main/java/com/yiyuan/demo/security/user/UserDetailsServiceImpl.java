@@ -1,6 +1,8 @@
 package com.yiyuan.demo.security.user;
 
 
+import com.sun.org.apache.bcel.internal.classfile.Code;
+import com.yiyuan.demo.result.AjaxResult;
 import com.yiyuan.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,6 +21,7 @@ public class UserDetailsServiceImpl extends AbstractUserDetailsAuthenticationPro
     UserService userService;
     @Autowired
      PasswordEncoder passwordEncoder;
+
 
     @Override
     protected void additionalAuthenticationChecks(UserDetails userDetails, UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) throws AuthenticationException {
@@ -46,6 +49,7 @@ public class UserDetailsServiceImpl extends AbstractUserDetailsAuthenticationPro
         // 账户密码校验
         if (!passwordEncoder.matches(presentedPassword, loadedUser.getPassword())) {
             logger.error("密码不正确！");
+
             flag = false;
         }
 
@@ -53,12 +57,10 @@ public class UserDetailsServiceImpl extends AbstractUserDetailsAuthenticationPro
         if (false) {
             flag = false;
         }
-
         // 认证失败
         if (!flag) {
-            throw new RuntimeException("账号密码不正确!认证失败");
+            throw new RuntimeException("用户密码认证失败");
         }
-
         loadedUser=userService.loadUserByUsername(s);
         return loadedUser;
     }

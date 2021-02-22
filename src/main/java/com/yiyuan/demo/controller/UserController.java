@@ -1,11 +1,15 @@
 package com.yiyuan.demo.controller;
 
 
+import com.alibaba.fastjson.JSONObject;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.util.PageObjectUtil;
 import com.yiyuan.demo.entiy.Permission;
 import com.yiyuan.demo.entiy.Role;
 import com.yiyuan.demo.entiy.User;
 import com.yiyuan.demo.entiy.session.CurrentUser;
 import com.yiyuan.demo.entiy.token.Token;
+import com.yiyuan.demo.page.PageHelp;
 import com.yiyuan.demo.result.AjaxResult;
 import com.yiyuan.demo.service.*;
 import com.yiyuan.demo.service.token.TokenService;
@@ -14,12 +18,15 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author SongYC
@@ -46,22 +53,30 @@ public class UserController {
 
     @Autowired
     RolePermissionService rolePermissionService;
-    /****
-     *登录功能
-     *
-     *
-     */
-//    @ApiOperation(value = "登录")
-//    @RequestMapping(value = "/login", method = RequestMethod.GET)
-//    public AjaxResult login(@RequestParam("username") String username, @RequestParam("password") String password) {
-//        AjaxResult<Token> tokenAjaxResult = userService.login(username, password);
-//        Token token = tokenAjaxResult.getData();
-//        User user = userService.selectByMobilePassword(username, password);
-//        List<Role> role = roleService.selectByPrimaryKey(user.getId());
-//        token.setRoles(role);
-//        return AjaxResult.success(tokenAjaxResult);
-//    }
 
+    private String prefix = "system/user/";
+
+    @RequestMapping(value = "/list")
+    public String List() {
+        return prefix + "user";
+    }
+
+    @RequestMapping(value = "/main")
+    public String main() {
+        //userService.findAll();
+        return "main";
+    }
+
+    /**
+     * @描述 用户数据
+     * @date 2018/9/15 12:30
+     */
+    @RequestMapping(value = "/tableList",method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxResult list(User user) {
+        List<User> users = userService.findAll();
+        return AjaxResult.success(users);
+    }
 
     /****
      *添加用户-角色
@@ -123,13 +138,65 @@ public class UserController {
     @RequestMapping(value = "/index")
     public String toIndex(Model model) {
         CurrentUser currentUser = CurrentUserUtils.getCurrent();
-       User user= userService.selectByName(currentUser.getUserName());
+        User user = userService.selectByName(currentUser.getUserName());
         model.addAttribute("user", user);
         //permissionService.selectByPrimaryKey(Long.valueOf(id))
-       Role role= userRoleService.selectId(user.getId());
-       model.addAttribute("role",role);
-       List<Permission> permissionList=rolePermissionService.selectId(role.getId());
-        model.addAttribute("menu",permissionList);
+        Role role = userRoleService.selectId(user.getId());
+        model.addAttribute("role", role);
+        List<Permission> permissionList = rolePermissionService.selectId(role.getId());
+        System.out.println(permissionList);
+        model.addAttribute("menus", permissionList);
         return "index";
+    }
+
+    @RequestMapping(value = "/failure")
+    public String failure(Model model){
+        model.addAttribute("failure","T");
+        return "login";
+    }
+
+
+    /****
+     *保存功能
+     *
+     *
+     */
+
+    //@PreAuthorize("hasAuthority('system.user.save')")
+    @RequestMapping(value = "/save", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxResult save(User user) {
+        JSONObject object = new JSONObject();
+        object.put("user", user);
+        log.info("注册人", user);
+        try {
+            int a=userService.insertSelective(user);
+            userRoleService.save(Long.valueOf(user.getRole()),user.getId());
+            return AjaxResult.success(a);
+        } catch (Exception e) {
+            log.error("个人用户注册,异常：" + e.toString());
+            return AjaxResult.failed();
+        }
+    }
+
+
+    /**
+     * @描述 添加用户页面
+     * @date 2018/9/15 18:46
+     */
+    @RequestMapping("/toAdd")
+    //@PreAuthorize("hasAuthority('system.user.save')")
+    public String toaddUser(Model model) {
+        Map<String, Object> role_post_dept = getRole_Post_Dept();
+        model.addAttribute("roles", role_post_dept.get("role"));
+        return  "system/user/save";
+    }
+
+    public Map<String, Object> getRole_Post_Dept() {
+        Map<String, Object> map = new HashMap<>();
+//        角色
+        List<Role> roles = roleService.selectByAllList(new Role());
+        map.put("role", roles);
+        return map;
     }
 }

@@ -2,6 +2,7 @@ package com.yiyuan.demo.entiy;
 
 import jdk.nashorn.internal.ir.annotations.Immutable;
 import lombok.Data;
+import org.springframework.security.core.GrantedAuthority;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -12,7 +13,7 @@ import java.util.List;
  * @author 
  */
 @Data
-public class Permission implements Serializable {
+public class Permission implements GrantedAuthority {
     /**
      * 权限ID
      */
@@ -77,4 +78,9 @@ public class Permission implements Serializable {
     @Immutable
     private List<Permission> children;
     private static final long serialVersionUID = 1L;
+
+    @Override
+    public String getAuthority() {
+        return null;
+    }
 }

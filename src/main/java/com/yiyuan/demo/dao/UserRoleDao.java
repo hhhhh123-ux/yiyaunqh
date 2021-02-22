@@ -1,7 +1,10 @@
 package com.yiyuan.demo.dao;
 
 
+import com.yiyuan.demo.entiy.Role;
 import com.yiyuan.demo.entiy.mid.UserRole;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
@@ -23,7 +26,9 @@ public interface UserRoleDao {
 
     void deleteRoleIdUserId(Long roleId, Long userId);
 
-    void save(Long roleId, Long userId);
+    void save(@Param("roleId") Long roleId, @Param("userId") Long userId);
 
    Long selectById(Long userId);
+
+
 }

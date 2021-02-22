@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<link th:href="@{/ajax.libs/iCheck/custom.css}" rel="stylesheet"/>
+<link href="/ajax.libs/jquery-layout/jquery.layout-latest.css"
+      th:href="@{/ajax.libs/jquery-layout/jquery.layout-latest.css}" rel="stylesheet"/>
+<link href="/ajax.libs/jquery-ztree/3.5/css/metro/zTreeStyle.css"
+      th:href="@{/ajax.libs/jquery-ztree/3.5/css/metro/zTreeStyle.css}" rel="stylesheet"/>
+
+<body class="gray-bg">
+<table>
+    <thead>
+    <tr>
+        <th>名称</th>
+        <th>介绍</th>
+        <th>编码</th>
+        <th>地址</th>
+        <th>类别</th>
+        <th>创建时间</th>
+    </tr>
+    </thead>
+<tbody>
+<span th:each="menu: ${permissionList}">
+<tr>
+    <td th:text="${menu.name}"></td>
+    <td th:text="${menu.intro}"></td>
+    <td th:text="${menu.code}"></td>
+    <td th:text="${menu.url}"></td>
+    <td th:if="${menu.category}==1">目录</td>
+    <td th:if="${menu.category}==2">菜单</td>
+    <td th:if="${menu.category}==3">按钮</td>
+    <td th:text="${#dates.format(menu.createtime,'yyyy-MM-dd')}"></td>
+    </td>
+</tr>
+<span th:each="menu1: ${menu.children}">
+    <tr>
+    <td th:text="${menu1.name}"></td>
+    <td th:text="${menu1.intro}"></td>
+    <td th:text="${menu1.code}"></td>
+    <td th:text="${menu1.url}"></td>
+ <td th:if="${menu1.category}==1">目录</td>
+    <td th:if="${menu1.category}==2">菜单</td>
+    <td th:if="${menu1.category}==3">按钮</td>
+        <td th:text="${#dates.format(menu1.createtime,'yyyy-MM-dd')}"></td>
+    </tr>
+      <tr th:each="menu2: ${menu1.children}">
+    <td th:text="${menu2.name}"></td>
+    <td th:text="${menu2.intro}"></td>
+    <td th:text="${menu2.code}"></td>
+    <td th:text="${menu2.url}"></td>
+ <td th:if="${menu2.category}==1">目录</td>
+    <td th:if="${menu2.category}==2">菜单</td>
+    <td th:if="${menu2.category}==3">按钮</td>
+          <td th:text="${#dates.format(menu2.createtime,'yyyy-MM-dd')}"></td>
+      </tr>
+</span>
+
+</span>
+</tbody>
+</table>
+<div th:include="include :: footer"></div>
+<script th:src="@{/ajax.libs/jquery-layout/jquery.layout-latest.js}"></script>
+<script th:src="@{/ajax.libs/jquery-ztree/3.5/js/jquery.ztree.all-3.5.js}"></script>
+<!--<script th:inline="javascript">-->
+<!--    window.onload = function () {-->
+<!--        $.ajax({-->
+<!--            type: 'POST',-->
+<!--            url: "/permission/menu/select",-->
+<!--            contentType: "application/json;cherset=utf-8",-->
+<!--            dataType: "json",-->
+<!--            success: function (data){-->
+<!--                $('.table_node').empty()-->
+<!--                //取出后端传过来的list值-->
+<!--                var chargeRuleLogs = data.data-->
+<!--                //对list值进行便利-->
+<!--                $.each(chargeRuleLogs, function (index, n) {-->
+<!--                    var child = "<tr>"+"<td>" + chargeRuleLogs[index].name +  "</td>"-->
+<!--                        + "<td>" + chargeRuleLogs[index].code + "</td>"-->
+<!--                        + "<td>" + chargeRuleLogs[index].url + "</td>"-->
+<!--                        + "<td>" + chargeRuleLogs[index].intro + "</td>"-->
+<!--                        + "<td>" + chargeRuleLogs[index].children+ "</td>"-->
+<!--                        +"</tr>"-->
+<!--                    //将信息追加-->
+<!--                    $(".table_node").append(child)-->
+<!--                });-->
+<!--            }-->
+<!--        });-->
+<!--    }-->
+
+
+<!--</script>-->
+
+</body>
+</html>

@@ -183,4 +183,9 @@
     set  deleted = 1
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <select id="findAll"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from user where deleted=0
+  </select>
 </mapper>

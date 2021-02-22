@@ -10,6 +10,8 @@ import com.yiyuan.demo.service.RolePermissionService;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -21,13 +23,15 @@ import java.util.List;
  */
 @Api(value = "权限管理")
 @Slf4j
-@RestController
+@Controller
 @RequestMapping("/permission/menu")
 public class PermissionController {
     @Autowired
     PermissionService permissionService;
     @Autowired
     RolePermissionService rolePermissionService;
+
+    private String prefix = "system/menu/";
     @PostMapping("/save")
     public AjaxResult save(@RequestBody Permission permission)  {
          int result=permissionService.countselectCode(permission.getCode());
@@ -58,9 +62,18 @@ public class PermissionController {
      * @param
      * @return 返回
      */
-    @PostMapping("/select")
-    public AjaxResult select() {
+    @RequestMapping(value = "/select",method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxResult select(Permission permission) {
         List<Permission> permissionList = permissionService.findMenu();
         return AjaxResult.success(permissionList);
+    }
+
+
+    @RequestMapping(value = "/list")
+    public String List(Model model) {
+        List<Permission> permissionList = permissionService.findMenu();
+        model.addAttribute("permissionList",permissionList);
+        return "system/menu/menu";
     }
 }

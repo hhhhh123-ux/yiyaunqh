@@ -41,4 +41,14 @@ public class RoleServiceImpl implements RoleService {
         }
         return roleList;
     }
+
+    @Override
+    public List<Role> selectByAllList(Role role) {
+        return roleDao.selectByAllList(role);
+    }
+
+    @Override
+    public List<Role> findAll() {
+        return roleDao.findAll();
+    }
 }

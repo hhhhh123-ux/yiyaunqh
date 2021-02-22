@@ -4,6 +4,8 @@ package com.yiyuan.demo.dao;
 import com.yiyuan.demo.entiy.User;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 public interface UserDao {
     int deleteByPrimaryKey(Long id);
 
@@ -22,4 +24,6 @@ public interface UserDao {
     int updateByPrimaryKey(User record);
 
     int deleteupdate(Long id);
+
+    List<User> findAll();
 }

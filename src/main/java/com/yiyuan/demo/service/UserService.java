@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.text.ParseException;
+import java.util.List;
 
 public interface UserService extends UserDetailsService {
     int deleteByPrimaryKey(Long id);
@@ -28,4 +29,6 @@ public interface UserService extends UserDetailsService {
     int updateByPrimaryKey(User record);
 
     int deleteupdate(Long id);
+
+    List<User> findAll();
 }

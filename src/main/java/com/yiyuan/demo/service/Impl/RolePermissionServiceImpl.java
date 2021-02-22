@@ -44,16 +44,42 @@ public class RolePermissionServiceImpl implements RolePermissionService {
     @Override
     public List<Permission> selectId(Long roleId) {
         List<String> permissionId=rolePermissionDao.findRoleId(roleId);
-
         List<Permission> permissionList=new ArrayList<>();
-
         for(String permissionid:permissionId){
-            Permission permisssion=permissionDao.selectByPrimaryKey(Long.valueOf(permissionid));
-            permissionList.add(permisssion);
+                Permission permisssion=permissionDao.selectByPrimaryKey(Long.valueOf(permissionid));
+                permissionList.add(permisssion);
         }
-        return permissionList;
-    }
+        List<Permission> permissionList1 = new ArrayList<>();
+        // 找到所有的一级分类
+        for (Permission entity : permissionList) {
+            System.out.println("id:"+entity.getParentId());
+            if ("0".equals(String.valueOf(entity.getParentId()))) {
+                permissionList1.add(entity);
+                entity.setChildren(getChildrens(entity, permissionList));
 
+            }
+        }
+        return permissionList1;
+    }
+    public static List<Permission> getChildrens(Permission root, List<Permission> all) {
+        List<Permission> children = new ArrayList<>();
+        for (Permission a : all) {
+            String pid = String.valueOf(a.getParentId());
+            String pi = String.valueOf(root.getId());
+            if (pid.equals(pi)) {
+                children.add(a);
+            }
+
+        }
+
+//        for (Permission level1Menu :children) {
+//            level1Menu.setChildren(getChildrens(level1Menu, all));
+//        }
+//        if(children.size()==0){
+//            return null;
+//        }
+        return children;
+    }
 
 
     public List<String> list1(List<String> list, List<String> roleIds) {

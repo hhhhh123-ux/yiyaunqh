@@ -14,6 +14,9 @@ public class AjaxResult<T> implements Serializable {
     private T data;
     private String message;
     private String debug;
+    public AjaxResult() {
+
+    }
 
 
     public AjaxResult(int code) {

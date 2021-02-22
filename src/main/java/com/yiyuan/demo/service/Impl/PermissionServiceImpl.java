@@ -56,19 +56,10 @@ public class PermissionServiceImpl implements PermissionService {
             System.out.println("id:"+entity.getParentId());
             if ("0".equals(String.valueOf(entity.getParentId()))) {
                 permissionList1.add(entity);
-              entity.setChildren(getChildrens(entity, permissionList));
+               entity.setChildren(getChildrens(entity, permissionList));
 
             }
         }
-//        for (Permission level1Menu :permissionList1) {
-//            level1Menu.setChildren(getChildrens(level1Menu, permissionList));
-//        }
-//        permissionList1.sort(new Comparator<Permission>() {
-//            @Override
-//            public int compare(Permission o1, Permission o2) {
-//                return (Integer.valueOf(String.valueOf(o1.getParentId())) == null ? 0 :Integer.valueOf(String.valueOf(o1.getParentId())) - (Integer.valueOf(String.valueOf(o2.getParentId())) == null ? 0 : Integer.valueOf(String.valueOf(o2.getParentId()))));
-//            }
-//        });
         return permissionList1;
     }
     /**

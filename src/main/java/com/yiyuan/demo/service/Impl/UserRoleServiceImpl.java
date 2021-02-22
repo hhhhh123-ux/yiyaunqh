@@ -5,10 +5,12 @@ import com.yiyuan.demo.dao.UserRoleDao;
 import com.yiyuan.demo.entiy.Role;
 import com.yiyuan.demo.entiy.mid.UserRole;
 import com.yiyuan.demo.service.UserRoleService;
+import com.yiyuan.demo.utils.CurrentUserUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -42,6 +44,17 @@ public class UserRoleServiceImpl implements UserRoleService {
        Long roleId= userRoleDao.selectById(userId);
        Role role= roleDao.selectByPrimaryKey(roleId);
         return role;
+    }
+
+    @Override
+    public void save(Long roleId, Long userId) {
+        UserRole userRole=new UserRole();
+        userRole.setRoleId(roleId);
+        userRole.setUserId(userId);
+        userRole.setCreatetime(new Date());
+        userRole.setCreator(CurrentUserUtils.getCurrentUser());
+        userRoleDao.insertSelective(userRole);
+       // userRoleDao.save(roleId,userId);
     }
 
     public List<String> list1(List<String> list, List<String> roleIds) {

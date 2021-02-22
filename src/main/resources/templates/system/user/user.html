@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<link th:href="@{/ajax.libs/iCheck/custom.css}" rel="stylesheet"/>
+<link href="/ajax.libs/jquery-layout/jquery.layout-latest.css"
+      th:href="@{/ajax.libs/jquery-layout/jquery.layout-latest.css}" rel="stylesheet"/>
+<link href="/ajax.libs/jquery-ztree/3.5/css/metro/zTreeStyle.css"
+      th:href="@{/ajax.libs/jquery-ztree/3.5/css/metro/zTreeStyle.css}" rel="stylesheet"/>
+
+<body class="gray-bg">
+<!--<div class="container-div">-->
+<!--    <div class="row">-->
+<!--        <div class="col-sm-12 select-info">-->
+<!--            <form id="operlog-form">-->
+<!--                <div class="select-list gd">-->
+<!--                    <ul>-->
+<!--                        <li>-->
+<!--                            姓名：<input type="text" name="name"/>-->
+<!--                        </li>-->
+<!--                        <li>-->
+<!--                            手机号码：<input type="text" name="mobile"/>-->
+<!--                        </li>-->
+
+<!--                        <li>-->
+<!--                            用户状态：<select name=""-->
+<!--                        >-->
+<!--                            <option value="">所有</option>-->
+<!--                            <option th:value="0">正常</option>-->
+<!--                            <option th:value="1">停用</option>-->
+<!--                        </select>-->
+<!--                        </li>-->
+<!--                        <li class="select-time">-->
+<!--                            <label>创建时间： </label>-->
+<!--                            <input type="text" class="time-input" style="width: 150px" id="beginTime" placeholder="开始时间" name="beginTime" lay-key="1">-->
+<!--                            <span>-</span>-->
+<!--                            <input type="text" class="time-input" style="width: 150px" id="overTime" placeholder="结束时间" name="overTime" lay-key="2">-->
+<!--                        </li>-->
+<!--                        <li>-->
+<!--                            <a class="btn btn-primary btn-rounded btn-sm"-->
+<!--                               onclick="$.table.search($('form').attr('id'))"><i class="fa fa-search"></i>&nbsp;搜索</a>-->
+
+<!--                            <a class="btn btn-warning btn-rounded btn-sm"-->
+<!--                               onclick="$.form.reset($('form').attr('id'))"><i class="fa fa-refresh"></i>&nbsp;重置</a>-->
+<!--                        </li>-->
+<!--                    </ul>-->
+<!--                </div>-->
+<!--            </form>-->
+<!--        </div>-->
+
+
+<!--    </div>-->
+<!--</div>-->
+<div class="container-div">
+    <div class="row">
+        <div class="col-sm-12 select-info">
+            <div class="col-sm-12 select-info order-table">
+                <div class="btn-group hidden-xs btnGroup" id="toolbar" role="group">
+                    <a class="btn btn-outline btn-success btn-rounded" onclick="add()">
+                        <i class="fa fa-plus"></i> 新增
+                    </a>
+
+                </div>
+            <table>
+                <thead>
+                <tr>
+                    <th>名称</th>
+                    <th>手机号</th>
+                    <th>id</th>
+<!--                    <th>操作</th>-->
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody class="table_node">
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+<div th:include="include :: footer"></div>
+<script th:src="@{/ajax.libs/jquery-layout/jquery.layout-latest.js}"></script>
+<script th:src="@{/ajax.libs/jquery-ztree/3.5/js/jquery.ztree.all-3.5.js}"></script>
+<script th:inline="javascript">
+    window.onload = function () {
+        $.ajax({
+            type: 'POST',
+            url: "/user/form/tableList",
+            contentType: "application/json;cherset=utf-8",
+            dataType: "json",
+            success: function (data){
+            $('.table_node').empty()
+        //取出后端传过来的list值
+                JSON.stringify(data)
+        var chargeRuleLogs = data.data
+                JSON.stringify(data)
+                JSON.stringify(chargeRuleLogs)
+
+        //对list值进行便利
+        $.each(chargeRuleLogs, function (index1, n) {
+            var child = "<tr>"+"<td>" + chargeRuleLogs[index1].name +  "</td>"
+                + "<td>" + chargeRuleLogs[index1].mobile + "</td>"
+                + "<td>" + chargeRuleLogs[index1].id + "</td>"
+                // + "<td>" +"<a href="+deleteuser(chargeRuleLogs[index1].id)+">"+"删除"+"</a>" + "</td>"
+                + "<td>" +"<input type=\"button\" onclick='deleteuser("+chargeRuleLogs[index1].id+")' value='删除' maxlength='1' min='1' max='1' minlength='1'>"+"</input>" + "</td>"
+                +"</tr>"
+            //将信息追加
+            $(".table_node").append(child)
+        });
+    }
+    });
+    }
+
+function add() {
+           location.href ="/user/form/toAdd"
+}
+
+function deleteuser(id){
+
+    $.ajax({
+        type: 'POST',
+        url: "/user/form/delete/"+id,
+        contentType: "application/json;cherset=utf-8",
+        dataType: "json",
+        success: function (data) {
+            var chargeRuleLogs = data.data
+            JSON.stringify(data)
+            JSON.stringify(chargeRuleLogs)
+            JSON.stringify(chargeRuleLogs)
+            if(data.code==1){
+                location.href ="/user/form/list"
+            }
+        },
+        error:function () {
+            alert("异常！");
+        }
+
+        })
+    }
+</script>
+
+</body>
+</html>

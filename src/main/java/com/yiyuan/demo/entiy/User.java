@@ -1,17 +1,24 @@
 package com.yiyuan.demo.entiy;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.collect.Lists;
 import com.yiyuan.demo.entiy.token.Token;
+import com.yiyuan.demo.utils.StreamUtils;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * user
- * @author 
+ *
+ * @author
  */
 @Data
 public class User implements UserDetails {
@@ -71,6 +78,10 @@ public class User implements UserDetails {
      */
     private String editor;
 
+    private String role;
+
+    private List<Role> roles;
+
     /**
      * 逻辑删除:0=未删除,1=已删除
      */
@@ -82,12 +93,20 @@ public class User implements UserDetails {
 
     public User(String username, String encode, List<GrantedAuthority> admin) {
     }
-public User(){
 
-}
+    public User() {
+
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+       List<Role> roles = this.getRoles();
+        List<Permission> permissions = Lists.newArrayList();
+        if (null == roles) {
+            return Lists.newArrayList();
+        }
+        roles.forEach(role -> permissions.addAll(role.getAuths()));
+        return permissions.stream().filter(StreamUtils.distinctByKey(Permission::getCode)).collect(Collectors.toList());
     }
 
     @Override
